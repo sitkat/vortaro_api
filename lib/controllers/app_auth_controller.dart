@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auth/models/response_model.dart' as res;
 import 'package:auth/models/user.dart';
+import 'package:auth/utils/app_utils.dart';
 import 'package:conduit/conduit.dart';
 import 'package:conduit_core/conduit_core.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
@@ -89,16 +90,20 @@ class AppAuthController extends ResourceController {
   @Operation.post("refresh")
   Future<Response> refreshToken(
       @Bind.path("refresh") String refreshToken) async {
-    final User fetchedUser = User();
-
-    return Response.ok(res.ResponseModel(data: {
-      "id": fetchedUser.id,
-      "refreshToken": fetchedUser.refreshToken,
-      "accessToken": fetchedUser.accessToken,
-    }, message: "Успешное обновление токенов")
-        .toJson());
+    try {
+      final id = AppUtils.getIdFromToken(refreshToken);
+      await _updateTokens(id, managedContext);
+      final user = await managedContext.fetchObjectWithID<User>(id);
+      return Response.ok(res.ResponseModel(
+          data: user?.backing.contents,
+          message: "Успешное обновление токенов"));
+    } catch (error) {
+      return Response.serverError(
+          body: res.ResponseModel(message: error.toString()));
+    }
   }
 
+  // Получение токена
   Map<String, dynamic> _getTokens(int id) {
     final key = Platform.environment["SECRET_KEY"] ?? "SECRET_KEY";
     final accessClaimSet =

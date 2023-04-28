@@ -1,3 +1,4 @@
+import 'package:auth/models/word.dart';
 import 'package:conduit_core/conduit_core.dart';
 
 class User extends ManagedObject<_User> implements _User {}
@@ -20,4 +21,5 @@ class _User {
   @Column(omitByDefault: true)
   String? hashPassword;
 
+  ManagedSet<Word>? wordList;
 }

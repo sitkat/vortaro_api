@@ -1,0 +1,66 @@
+version: '3.5'
+
+# 6100 - auth
+# 6101 - db_auth
+
+services:
+
+  auth:
+    restart: on-failure
+    build: ./auth
+    container_name: auth
+    environment:
+      - SECRET_KEY=SECRET_KEY
+      - PORT=6100
+      - DB_USERNAME=admin
+      - DB_PASSWORD=root
+      - DB_HOST=db_auth
+      - DB_PORT=6101
+      - DB_NAME=admin
+      - TIME=1
+    depends_on:
+      - db_auth
+    networks:
+      - internal_net
+    volumes:
+      - auth_vol:/app/
+
+  db_auth:
+    restart: on-failure
+    container_name: db_auth
+    ports:
+      - "6101:6101"
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=admin
+    image: postgres:14.3-alpine
+    command:
+      - "postgres"
+      - "-c"
+      - "port=6101"
+    volumes:
+      - db_auth_vol:/var/lib/postgresql/data/
+    networks:
+      - internal_net
+  
+  nginx:
+    restart: on-failure
+    container_name: nginx
+    image: nginx:1.24.0-alpine3.17
+    networks:
+      - internal_net
+    ports:
+      - 80:80
+    depends_on:
+      - auth
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+
+
+volumes:
+  db_auth_vol: {}
+  auth_vol: {}
+
+networks:
+  internal_net:
+    driver: bridge

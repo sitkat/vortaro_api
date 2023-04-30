@@ -17,6 +17,9 @@ class AppWordController extends ResourceController {
     @Bind.header(HttpHeaders.authorizationHeader) String header,
     @Bind.body() Word word,
   ) async {
+    if (word.title == null || word.title?.isEmpty == true || word.translation == null || word.translation?.isEmpty == true){
+      return AppResponse.badRequest(message: "Поля title и translation обязательные");
+    }
     try {
       final id = AppUtils.getIdFromHeader(header);
       final logInUser = await managedContext.fetchObjectWithID<User>(id);
@@ -63,7 +66,8 @@ class AppWordController extends ResourceController {
           x.edition,
           x.title,
           x.translation,
-          x.description
+          x.description,
+          x.user
         ])
         ..join(object: (x) => x.user)
           .returningProperties((x) => [x.id, x.username]);
@@ -73,45 +77,6 @@ class AppWordController extends ResourceController {
       return AppResponse.serverError(error, message: "Ошибка получения слова");
     }
   }
-
-  // @Operation.get()
-  // Future<Response> getAllTasks() async {
-  //   try {
-  //     final qGetAllTasks = Query<Task>(managedContext)
-  //       ..returningProperties((x) => [
-  //             x.id,
-  //             x.title,
-  //             x.content,
-  //             x.createdAt,
-  //             x.startOfWork,
-  //             x.endOfWork,
-  //             x.imageUrl,
-  //             x.contractorCompany,
-  //             x.responsibleMaster,
-  //             x.representative,
-  //             x.equipmentLevel,
-  //             x.staffLevel,
-  //             x.resultsOfTheWork,
-  //             x.expenses,
-  //             x.user,
-  //             x.category,
-  //             x.status,
-  //             x.industry,
-  //             x.taskType
-  //           ])
-  //       ..join(object: (x) => x.user)
-  //           .returningProperties((x) => [x.id, x.username, x.email])
-  //       ..join(object: (x) => x.status)
-  //       ..join(object: (x) => x.industry)
-  //       ..join(object: (x) => x.taskType)
-  //       ..join(object: (x) => x.category);
-  //     final List<Task> tasks = await qGetAllTasks.fetch();
-  //     if (tasks.isEmpty) return Response.notFound();
-  //     return Response.ok(tasks);
-  //   } catch (error) {
-  //     return AppResponse.serverError(error, message: "Ошибка вывода задач");
-  //   }
-  // }
 
   // Удаление слова
   @Operation.delete("id")

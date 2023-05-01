@@ -86,9 +86,11 @@ class AppAuthController extends ResourceController {
             body: res.ResponseModel(message: "Token is not valid"));
       } else {
         await _updateTokens(id, managedContext);
-      }
-      return AppResponse.ok(
+        final user = await managedContext.fetchObjectWithID<User>(id);
+        return AppResponse.ok(
           body: user?.backing.contents, message: "Успешное обновление токенов");
+      }
+      
     } catch (error) {
       return AppResponse.serverError(error,
           message: "Ошибка обновления токенов");

@@ -4,6 +4,7 @@ import 'package:conduit_core/conduit_core.dart';
 
 import 'package:auth/models/word.dart';
 import 'package:auth/models/user.dart';
+import 'package:auth/models/favorite.dart';
 
 void main(List<String> arguments) async {
   final int port = int.tryParse(AppEnv.port) ?? 0;

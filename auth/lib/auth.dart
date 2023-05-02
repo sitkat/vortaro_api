@@ -1,4 +1,5 @@
 import 'package:auth/controllers/app_auth_controller.dart';
+import 'package:auth/controllers/app_favorite_controller.dart';
 import 'package:auth/controllers/app_token_controller.dart';
 import 'package:auth/controllers/app_user_controller.dart';
 import 'package:auth/controllers/app_word_controller.dart';
@@ -8,6 +9,8 @@ import 'package:conduit_postgresql/conduit_postgresql.dart';
 
 import 'package:auth/models/word.dart';
 import 'package:auth/models/user.dart';
+import 'package:auth/models/favorite.dart';
+
 
 class AppService extends ApplicationChannel {
   late final ManagedContext managedContext;
@@ -28,7 +31,10 @@ class AppService extends ApplicationChannel {
         .link(() => AppUserController(managedContext))
     ..route("word/[:id]")
         .link(() => AppTokenController())!
-        .link(() => AppWordController(managedContext));
+        .link(() => AppWordController(managedContext))
+    ..route("favorite/[:id]")
+        .link(() => AppTokenController())!
+        .link(() => AppFavoriteController(managedContext));
 
   PostgreSQLPersistentStore _initDatabase() {
     return PostgreSQLPersistentStore(AppEnv.dbUsername, AppEnv.dbPassword,

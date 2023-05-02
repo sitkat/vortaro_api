@@ -1,3 +1,4 @@
+import 'package:auth/models/favorite.dart';
 import 'package:auth/models/word.dart';
 import 'package:conduit_core/conduit_core.dart';
 
@@ -22,4 +23,5 @@ class _User {
   String? hashPassword;
 
   ManagedSet<Word>? wordList;
+  ManagedSet<Favorite>? favoriteUserList;
 }

@@ -15,6 +15,7 @@ class _Word{
   String? title;
   String? translation;
   String? description;
+
   @Relate(#wordList, isRequired: true, onDelete: DeleteRule.cascade) // onDelete: DeleteRule.cascade
   User? user;
 

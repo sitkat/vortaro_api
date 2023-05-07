@@ -8,6 +8,9 @@ class Favorite extends ManagedObject<_Favorite> implements _Favorite{}
 class _Favorite{
   @primaryKey
   int? id;
+
+  @Serialize(input: true, output: false)
+  int? idWord;
   
   @Relate(#favoriteUserList, isRequired: true, onDelete: DeleteRule.cascade) // onDelete: DeleteRule.cascade
   User? user;

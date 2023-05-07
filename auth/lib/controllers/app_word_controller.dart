@@ -17,8 +17,12 @@ class AppWordController extends ResourceController {
     @Bind.header(HttpHeaders.authorizationHeader) String header,
     @Bind.body() Word word,
   ) async {
-    if (word.title == null || word.title?.isEmpty == true || word.translation == null || word.translation?.isEmpty == true){
-      return AppResponse.badRequest(message: "Поля title и translation обязательные");
+    if (word.title == null ||
+        word.title?.isEmpty == true ||
+        word.translation == null ||
+        word.translation?.isEmpty == true) {
+      return AppResponse.badRequest(
+          message: "Поля title и translation обязательные");
     }
     try {
       final id = AppUtils.getIdFromHeader(header);
@@ -40,18 +44,22 @@ class AppWordController extends ResourceController {
   }
 
   // Обновление слова
-  @Operation.put()
+  @Operation.put("id")
   Future<Response> updateWord(
     @Bind.header(HttpHeaders.authorizationHeader) String header,
     @Bind.path("id") int id,
     @Bind.body() Word word,
   ) async {
-    if (word.title == null || word.title?.isEmpty == true || word.translation == null || word.translation?.isEmpty == true){
-      return AppResponse.badRequest(message: "Поля title и translation обязательные");
+    if (word.title == null ||
+        word.title?.isEmpty == true ||
+        word.translation == null ||
+        word.translation?.isEmpty == true) {
+      return AppResponse.badRequest(
+          message: "Поля title и translation обязательные");
     }
     try {
-      final fWord = await managedContext.fetchObjectWithID<Word>(id);
       final idUser = AppUtils.getIdFromHeader(header);
+      final fWord = await managedContext.fetchObjectWithID<Word>(id);
       if (fWord == null) {
         return AppResponse.badRequest(message: "Слово не найдено");
       }
@@ -59,10 +67,10 @@ class AppWordController extends ResourceController {
         ..where((x) => x.id).equalTo(id)
         ..values.user?.id = idUser
         ..values.edition = DateTime.now()
-        ..values.title = fWord.title
-        ..values.translation = fWord.translation
-        ..values.description = fWord.description;
-      await qUpdateWord.insert();
+        ..values.title = word.title
+        ..values.translation = word.translation
+        ..values.description = word.description;
+      await qUpdateWord.update();
       return AppResponse.ok(message: "Усепешное обновление слова");
     } catch (error) {
       return AppResponse.serverError(error, message: "Ошибка обновления слова");
@@ -91,16 +99,10 @@ class AppWordController extends ResourceController {
 
       final qGetWord = Query<Word>(managedContext)
         ..where((x) => x.id).equalTo(word.id)
-        ..returningProperties((x) => [
-          x.id,
-          x.edition,
-          x.title,
-          x.translation,
-          x.description,
-          x.user
-        ])
+        ..returningProperties((x) =>
+            [x.id, x.edition, x.title, x.translation, x.description, x.user])
         ..join(object: (x) => x.user)
-          .returningProperties((x) => [x.id, x.username]);
+            .returningProperties((x) => [x.id, x.username]);
       final currentWord = await qGetWord.fetchOne();
       return Response.ok(currentWord);
     } catch (error) {
@@ -132,8 +134,8 @@ class AppWordController extends ResourceController {
   @Operation.get()
   Future<Response> getWords() async {
     try {
-      final qGetPosts = Query<Word>(managedContext);
-      final List<Word> words = await qGetPosts.fetch();
+      final qGetWords = Query<Word>(managedContext);
+      final List<Word> words = await qGetWords.fetch();
       if (words.isEmpty) return Response.notFound();
       return Response.ok(words);
     } catch (error) {

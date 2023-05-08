@@ -69,7 +69,9 @@ class AppFavoriteController extends ResourceController {
         ..join(object: (x) => x.word);
       final List<Favorite> favorites = await qGetFavorites.fetch();
       // if (favorites.isEmpty) return Response.notFound();
-      if (favorites.isEmpty) return AppResponse.ok(message: "Нет избранных");
+      // if (favorites.isEmpty) return AppResponse.ok(message: "Нет избранных");
+      // if (favorites.isEmpty) return Response.ok("");
+      // if (favorites.isEmpty) return Response.ok(favorites);
       return Response.ok(favorites);
     } catch (error) {
       return AppResponse.serverError(error,

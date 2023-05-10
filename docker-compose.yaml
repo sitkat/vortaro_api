@@ -23,7 +23,7 @@ services:
     networks:
       - internal_net
     volumes:
-      - auth_vol:/app/
+      - auth_vol:/app/migrations
 
   db_auth:
     restart: on-failure

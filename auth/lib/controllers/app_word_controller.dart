@@ -132,9 +132,14 @@ class AppWordController extends ResourceController {
 
   // Вывод слов
   @Operation.get()
-  Future<Response> getWords() async {
+  Future<Response> getWords(
+    @Bind.query("fetchLimit") int fetchLimit,
+    @Bind.query("offset") int offset,
+  ) async {
     try {
-      final qGetWords = Query<Word>(managedContext);
+      final qGetWords = Query<Word>(managedContext)
+        ..fetchLimit = fetchLimit
+        ..offset = offset;
       final List<Word> words = await qGetWords.fetch();
       if (words.isEmpty) return Response.notFound();
       return Response.ok(words);
@@ -142,4 +147,17 @@ class AppWordController extends ResourceController {
       return AppResponse.serverError(error, message: "Ошибка получения слов");
     }
   }
+
+  //   // Вывод слов
+  // @Operation.get()
+  // Future<Response> getWords() async {
+  //   try {
+  //     final qGetWords = Query<Word>(managedContext);
+  //     final List<Word> words = await qGetWords.fetch();
+  //     if (words.isEmpty) return Response.notFound();
+  //     return Response.ok(words);
+  //   } catch (error) {
+  //     return AppResponse.serverError(error, message: "Ошибка получения слов");
+  //   }
+  // }
 }

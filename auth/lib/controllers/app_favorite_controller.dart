@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:auth/models/favorite.dart';
-import 'package:auth/models/user.dart';
 import 'package:auth/models/word.dart';
 import 'package:auth/utils/app_response.dart';
 import 'package:auth/utils/app_utils.dart';
@@ -12,7 +11,6 @@ class AppFavoriteController extends ResourceController {
   AppFavoriteController(this.managedContext);
 
   //Добавление в избранные
-
   @Operation.post()
   Future<Response> createFavorite(
     @Bind.header(HttpHeaders.authorizationHeader) String header,

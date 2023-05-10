@@ -1,8 +1,5 @@
 version: '3.5'
 
-# 6100 - auth
-# 6101 - db_auth
-
 services:
 
   auth:

@@ -6,8 +6,6 @@ import 'favorite.dart';
 
 class Word extends ManagedObject<_Word> implements _Word{}
 
-// 'CREATE TABLE "$tableWord" ("id" INTEGER,"edition" DATE, "title" TEXT NOT NULL, "translation" TEXT NOT NULL, "description" TEXT, PRIMARY KEY("id" AUTOINCREMENT))';
-
 class _Word{
   @primaryKey
   int? id;
@@ -16,7 +14,7 @@ class _Word{
   String? translation;
   String? description;
 
-  @Relate(#wordList, isRequired: true, onDelete: DeleteRule.cascade) // onDelete: DeleteRule.cascade
+  @Relate(#wordList, isRequired: true, onDelete: DeleteRule.cascade)
   User? user;
 
   ManagedSet<Favorite>? favoriteWordList;

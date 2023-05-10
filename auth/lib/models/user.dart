@@ -2,7 +2,6 @@ import 'package:auth/models/favorite.dart';
 import 'package:auth/models/word.dart';
 import 'package:conduit_core/conduit_core.dart';
 
-// enum Role{admin, client}
 
 class User extends ManagedObject<_User> implements _User {}
 
@@ -23,9 +22,6 @@ class _User {
   String? salt;
   @Column(omitByDefault: true)
   String? hashPassword;
-
-  // @Column(nullable: false)
-  // Role? role;
 
   ManagedSet<Word>? wordList;
   ManagedSet<Favorite>? favoriteUserList;

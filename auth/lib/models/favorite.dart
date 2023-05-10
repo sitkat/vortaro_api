@@ -12,8 +12,8 @@ class _Favorite{
   @Serialize(input: true, output: false)
   int? idWord;
   
-  @Relate(#favoriteUserList, isRequired: true, onDelete: DeleteRule.cascade) // onDelete: DeleteRule.cascade
+  @Relate(#favoriteUserList, isRequired: true, onDelete: DeleteRule.cascade)
   User? user;
-  @Relate(#favoriteWordList, isRequired: true, onDelete: DeleteRule.cascade) // onDelete: DeleteRule.cascade
+  @Relate(#favoriteWordList, isRequired: true, onDelete: DeleteRule.cascade)
   Word? word;
 }

@@ -83,20 +83,12 @@ class AppWordController extends ResourceController {
     @Bind.path("id") int id,
   ) async {
     try {
-      // final currentUserId = AppUtils.getIdFromHeader(header);
       final word = await managedContext.fetchObjectWithID<Word>(id);
 
       if (word == null) {
         return AppResponse.ok(message: "Слово не найдено");
       }
-
-      // if (word.logInUser?.id != currentUserId){
-      //   return AppResponse.ok(message: "Нет доступа к слову");
-      // }
-      // word.backing.removeProperty("user");
       word.backing.removeProperty("edition");
-      // word.edition = formatDate(DateTime(word.edition), [yyyy, '-', mm,'-', dd]);
-
       final qGetWord = Query<Word>(managedContext)
         ..where((x) => x.id).equalTo(word.id)
         ..returningProperties((x) =>
@@ -147,17 +139,4 @@ class AppWordController extends ResourceController {
       return AppResponse.serverError(error, message: "Ошибка получения слов");
     }
   }
-
-  //   // Вывод слов
-  // @Operation.get()
-  // Future<Response> getWords() async {
-  //   try {
-  //     final qGetWords = Query<Word>(managedContext);
-  //     final List<Word> words = await qGetWords.fetch();
-  //     if (words.isEmpty) return Response.notFound();
-  //     return Response.ok(words);
-  //   } catch (error) {
-  //     return AppResponse.serverError(error, message: "Ошибка получения слов");
-  //   }
-  // }
 }
